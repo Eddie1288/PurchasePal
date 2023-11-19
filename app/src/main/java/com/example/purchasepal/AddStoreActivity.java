@@ -92,8 +92,24 @@ private void addStore() {
 
         String json = "{\n" +
                 "        \"username\": " + " \"philiponions\" " + ",\n" +
-                "        \"name\": " + "\"" + storeName.getText().toString() + "\"" + "\n" +
-                "}";
+                "        \"name\": " + "\"" + storeName.getText().toString() + "\"" + ",\n" +
+                "       \"items\": [ ";
+
+    int itemCount = addedItems.size();
+    for (int i = 0; i < itemCount; i++) {
+        String item = addedItems.get(i);
+        json += "{\"item_name\": " + "\"" + item + "\"}";
+
+        // Add a comma if it's not the last item
+        if (i < itemCount - 1) {
+            json += ",\n";
+        }
+    }
+        json += "]}";
+
+//
+//
+//                "}";
 
     Log.d("yeet", "addStore: " + json);
 
