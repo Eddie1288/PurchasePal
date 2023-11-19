@@ -6,29 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".DeleteStoreActivity">
 
-    <shape
-        android:id="@+id/listview_background_shape"
-        android:layout_width="314dp"
-        android:layout_height="175dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <shape-->
+<!--        android:id="@+id/listview_background_shape"-->
+<!--        android:layout_width="314dp"-->
+<!--        android:layout_height="175dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <stroke
-            android:width="2dp"
-            android:color="#ff207d94" />
+<!--        <stroke-->
+<!--            android:width="2dp"-->
+<!--            android:color="#ff207d94"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content" />-->
 
-        <padding
-            android:bottom="2dp"
-            android:left="2dp"
-            android:right="2dp"
-            android:top="2dp" />
+<!--        <padding-->
+<!--            android:bottom="2dp"-->
+<!--            android:left="2dp"-->
+<!--            android:right="2dp"-->
+<!--            android:top="2dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content" />-->
 
-        <corners android:radius="50dp" />
+<!--        <corners android:radius="50dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content" />-->
 
-        <solid android:color="#f" />
-    </shape>
+<!--        <solid android:color="#f"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content" />-->
+<!--    </shape>-->
 
     <TextView
         android:id="@+id/textView2"
