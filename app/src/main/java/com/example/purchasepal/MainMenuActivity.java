@@ -175,10 +175,10 @@ public class MainMenuActivity extends AppCompatActivity {
                             // Convert JSON array to an array of Store objects
                             Store[] stores = objectMapper.readValue(responseBody, Store[].class);
 
-                            Log.d("yeet", "Length: " + stores.length);
                             // Print the result
                             for (Store store : stores) {
                                 userStores.add(store.getName());
+                                Log.d("yeet", "onResponse: " + store.getName());
                             }
 
                             // Update the adapter's data
