@@ -49,7 +49,7 @@ import okhttp3.Response;
 
 public class MainMenuActivity extends AppCompatActivity {
     private Button addButton;
-    private String username = "philiponions";
+    private String username = "Daniel Thai";
     private TextView pagenameTextView;
     String latitudeTextView, longitTextView;
     // initializing FusedLocationProviderClient object
@@ -155,7 +155,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void getStores() {
 
         try {
-            String url = "http://172.31.113.129:5000/store/" + username;
+            String url = "http://192.168.1.72:5000/store/" + username;
 
             Request request = new Request.Builder()
                     .url(url)
