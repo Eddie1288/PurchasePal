@@ -17,8 +17,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,9 +37,6 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -46,7 +48,8 @@ import okhttp3.Response;
 
 
 public class MainMenuActivity extends AppCompatActivity {
-
+    private Button addButton;
+    private String username = "philiponions";
     private TextView pagenameTextView;
     String latitudeTextView, longitTextView;
     // initializing FusedLocationProviderClient object
@@ -58,6 +61,11 @@ public class MainMenuActivity extends AppCompatActivity {
     // from layout file
     private int PERMISSION_ID = 44;
 
+    ListView storeListView;
+
+    ArrayList<String> storeArray = new ArrayList<String>();
+    ArrayAdapter storeArrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +73,30 @@ public class MainMenuActivity extends AppCompatActivity {
 
         usersStores.add("University of Alberta");
         usersStores.add("HUB Mall");
+
+        getStores();
+
+         storeArrayAdapter = new ArrayAdapter<String>(this,
+                R.layout.store_list_view, storeArray);
+
+         addButton = findViewById(R.id.addStore);
+
+        storeListView = (ListView) findViewById(R.id.storeListDisplay);
+        storeListView.setAdapter(storeArrayAdapter);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainMenuActivity.this, AddStoreActivity.class));
+            }
+        });
+
+        storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
+            }
+        });
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -105,6 +137,78 @@ public class MainMenuActivity extends AppCompatActivity {
             // request for permissions
             requestPermissions();
         }
+    }
+
+    private void getStores() {
+
+        try {
+            String url = "http://172.31.113.129:5000/store/" + username;
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                    Log.d("yeet", "onFailure: " + "not working");
+                    Log.d("yeet", "onFailure: " + e.toString());
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    // Use Jackson to parse the JSON response
+                    try {
+                        // Read the JSON response as a JsonNode
+
+                        String responseBody = response.body().string();
+
+                        // Use Jackson to parse the JSON response
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try {
+
+                            ArrayList<String> userStores = new ArrayList<String>();
+
+                            // Convert JSON array to an array of Store objects
+                            Store[] stores = objectMapper.readValue(responseBody, Store[].class);
+
+                            Log.d("yeet", "Length: " + stores.length);
+                            // Print the result
+                            for (Store store : stores) {
+                                userStores.add(store.getName());
+                            }
+
+                            // Update the adapter's data
+                            storeArray.clear();
+                            storeArray.addAll(userStores);
+
+                            // Notify the adapter that the data has changed
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    storeArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            Log.e("yeet", e.toString());
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        Log.d("yeet", "onResponse: Bruh");
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("yeet", e.toString());
+            e.printStackTrace();
+        }
+
     }
 
     private void getPlaces(String latitude, String longitude) {
@@ -164,7 +268,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         for (JsonNode placeNode : placesNode) {
                             // Access individual elements
                             String displayName = placeNode.get("displayName").get("text").asText();
-                            Log.d("yeet", "onResponse: " + displayName);
+                            // Log.d("yeet", "onResponse: " + displayName);
                             if (usersStores.contains(displayName)) {
                                 storesFound.add(displayName);
                             }
