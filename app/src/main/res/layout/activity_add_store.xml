@@ -6,13 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".AddStoreActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/addItemsDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </ListView>
+
+    <EditText
+        android:id="@+id/storeName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You are in add store page"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:hint="Store Name"
+        app:layout_constraintBottom_toTopOf="@+id/itemQueued"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/itemQueued"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/addItemBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:hint="Add items here">
+
+    </EditText>
+
+    <Button
+        android:id="@+id/addItemBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        app:layout_constraintBottom_toTopOf="@+id/confirmAddButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></Button>
+
+    <Button
+        android:id="@+id/confirmAddButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        app:layout_constraintBottom_toBottomOf="@+id/addItemsDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
