@@ -37,6 +37,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -65,9 +67,13 @@ public class MainMenuActivity extends AppCompatActivity {
 
     ArrayList<String> storeArray = new ArrayList<String>();
     ArrayAdapter storeArrayAdapter;
+    private Account currentAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        currentAccount = new Account(username);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
@@ -107,13 +113,16 @@ public class MainMenuActivity extends AppCompatActivity {
         storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
+                Log.d("yeet", currentAccount.getStores().get(position).getStoreId().toString());
+                getItems(currentAccount.getStores().get(position).getStoreId().toString());
+//                Log.d("yeet ", "onItemClick: " + items.toString());
+
             }
         });
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        getLastLocation();
+
     }
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -152,6 +161,75 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+    private void getItems(String store_id) {
+        ArrayList<String> itemList = new ArrayList<String>();
+        try {
+            String url = "http://172.31.113.129:5000/items/" + store_id;
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                    Log.d("yeet", "onFailure: " + "not working");
+                    Log.d("yeet", "onFailure: " + e.toString());
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    // Use Jackson to parse the JSON response
+                    try {
+                        // Read the JSON response as a JsonNode
+
+                        String responseBody = response.body().string();
+                        Log.d("yeet", "onResponse: " + responseBody);
+                        ArrayList<String> itemList = new ArrayList<String>();
+
+                        // Use Jackson to parse the JSON response
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try {
+                            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+                            // Get the "places" array
+                            JsonNode itemsNode = jsonNode.get("item_names");
+
+                            ArrayList<String> storesFound = new ArrayList<String>();
+                            // Convert the "places" array to a Java array (if it's an array)
+                            if (itemsNode.isArray()) {
+                                // Iterate through the array
+                                for (JsonNode itemNode : itemsNode) {
+                                    Log.d("yeet", "onResponse: "+ itemNode.get("item_name").toString());
+                                    itemList.add(itemNode.get("item_name").toString());
+                                }
+
+                            }
+
+                            Intent intent = new Intent(MainMenuActivity.this, ItemListActivity.class);
+                            intent.putStringArrayListExtra("itemList", itemList);
+                            startActivity(intent);
+
+                        } catch (Exception e) {
+                            Log.e("yeet", e.toString());
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        Log.d("yeet", "onResponse: Bruh");
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("yeet", e.toString());
+            e.printStackTrace();
+        }
+    }
+
     private void getStores() {
 
         try {
@@ -187,7 +265,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
                             // Convert JSON array to an array of Store objects
                             Store[] stores = objectMapper.readValue(responseBody, Store[].class);
-
+                            ArrayList<Store> storesToArray = new ArrayList<>(Arrays.asList(stores));
+                            currentAccount.setStores(storesToArray);
                             // Print the result
                             for (Store store : stores) {
                                 userStores.add(store.getName());
@@ -197,6 +276,8 @@ public class MainMenuActivity extends AppCompatActivity {
                             // Update the adapter's data
                             storeArray.clear();
                             storeArray.addAll(userStores);
+
+                            getLastLocation();
 
                             // Notify the adapter that the data has changed
                             runOnUiThread(new Runnable() {
@@ -281,8 +362,9 @@ public class MainMenuActivity extends AppCompatActivity {
                         for (JsonNode placeNode : placesNode) {
                             // Access individual elements
                             String displayName = placeNode.get("displayName").get("text").asText();
-                            // Log.d("yeet", "onResponse: " + displayName);
-                            if (usersStores.contains(displayName)) {
+                             Log.d("yeet", "Store Found: " + displayName);
+                            Log.d("yeet", storeArray.toString());
+                            if (storeArray.contains(displayName)) {
                                 storesFound.add(displayName);
                             }
 
@@ -298,7 +380,7 @@ public class MainMenuActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("yeet", "onClick: " + which);
-                                    startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
+//                                    startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
                                 }
                             });
                             // create and show the alert dialog

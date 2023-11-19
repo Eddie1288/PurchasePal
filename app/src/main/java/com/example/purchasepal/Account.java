@@ -6,9 +6,8 @@ public class Account {
     private String username;
     private ArrayList<Store> stores;
 
-    public Account(String username, ArrayList<Store> stores) {
+    public Account(String username) {
         this.username = username;
-        this.stores = stores;
     }
 
     public String getUsername() {
