@@ -122,7 +122,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        getLastLocation();
+
     }
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -277,6 +277,8 @@ public class MainMenuActivity extends AppCompatActivity {
                             storeArray.clear();
                             storeArray.addAll(userStores);
 
+                            getLastLocation();
+
                             // Notify the adapter that the data has changed
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -360,8 +362,9 @@ public class MainMenuActivity extends AppCompatActivity {
                         for (JsonNode placeNode : placesNode) {
                             // Access individual elements
                             String displayName = placeNode.get("displayName").get("text").asText();
-                            // Log.d("yeet", "onResponse: " + displayName);
-                            if (usersStores.contains(displayName)) {
+                             Log.d("yeet", "Store Found: " + displayName);
+                            Log.d("yeet", storeArray.toString());
+                            if (storeArray.contains(displayName)) {
                                 storesFound.add(displayName);
                             }
 
@@ -377,7 +380,7 @@ public class MainMenuActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("yeet", "onClick: " + which);
-                                    startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
+//                                    startActivity(new Intent(MainMenuActivity.this, ItemListActivity.class));
                                 }
                             });
                             // create and show the alert dialog
