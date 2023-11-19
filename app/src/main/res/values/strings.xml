@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PurchasePal</string>
+    <string name="sign_in">Sign in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="sign_up">Sign up</string>
+    <string name="title_activity_main2">MainActivity2</string>
+
+</resources>
