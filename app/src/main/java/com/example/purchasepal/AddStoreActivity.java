@@ -116,7 +116,7 @@ private void addStore() {
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json"), json);
 
-        String url = "http://172.31.113.129:5000/store";
+        String url = "http://192.168.1.72:5000/store";
 
         Request request = new Request.Builder()
                 .url(url)
