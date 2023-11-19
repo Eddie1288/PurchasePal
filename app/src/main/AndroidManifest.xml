@@ -28,6 +28,9 @@
             android:name=".ItemListActivity"
             android:exported="false" />
         <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainMenuActivity"
             android:exported="false" />
         <activity
