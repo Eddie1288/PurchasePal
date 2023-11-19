@@ -91,6 +91,19 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+        storeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Perform actions when an item is long-clicked
+                // For example, start a new activity to delete the store
+                startActivity(new Intent(MainMenuActivity.this, DeleteStoreActivity.class));
+
+                // Return true to indicate that the long click event has been handled
+                return true;
+            }
+        });
+
+
         storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
